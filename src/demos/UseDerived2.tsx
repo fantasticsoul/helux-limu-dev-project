@@ -6,29 +6,33 @@ const delay = (ms = 1000) => new Promise((r) => setTimeout(r, ms));
 
 const [sharedState, setState, call] = share({ a: 1, b: { b1: { b2: 200 } } });
 const doubleAResult = derive(() => ({ val: sharedState.a * 2 + random() }));
-const aPlusB2Result = deriveAsync(
-  () => ({ source: [sharedState.a, sharedState.b.b1.b2], initial: { val: 0 } }),
-  async ({ source: [a, b2] }) => {
+const aPlusB2Result = deriveAsync({
+  fn: () => ({ val: 0 }),
+  deps: () => [sharedState.a, sharedState.b.b1.b2] as const,
+  task: async ({ input: [a, b2] }) => {
     await delay(1000);
     return { val: a + b2 + random() };
-  }
-);
+  },
+});
 // const transResult1 = derive(() => aPlusB2Result);
 // const transResult2 = derive(() => transResult1);
-const transResult1 = deriveAsync(
-  () => ({ source: [sharedState.a, aPlusB2Result.val], initial: { val: 0 } }),
-  async ({ source: [a, val] }) => {
+const transResult1 = deriveAsync({
+  fn: () => ({ val: 0 }),
+  deps: () => [sharedState.a, aPlusB2Result.val] as const,
+  task: async ({ input: [a, val] }) => {
     await delay(1000);
     return { val: a + val + random() };
   },
-);
-const transResult2 = deriveAsync(
-  () => ({ source: [sharedState.a, transResult1.val], initial: { val: 0 } }),
-  async ({ source: [a, val] }) => {
+});
+
+const transResult2 = deriveAsync({
+  fn: () => ({ val: 0 }),
+  deps: () => [sharedState.a, transResult1.val] as const,
+  task: async ({ input: [a, val] }) => {
     await delay(1000);
     return { val: a + val + random() };
   },
-);
+});
 const transResult3 = derive(() => {
   return { val: transResult2.val + 5 };
 });

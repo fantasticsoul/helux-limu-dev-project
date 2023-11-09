@@ -6,8 +6,8 @@ async function main() {
 }
 
 main().catch((err: any) => {
-  alert(`Oops, something must he wrong! err message: ${err.message}`);
   console.error(err);
+  alert(`Oops, something must he wrong! err message: ${err.message}`);
 });
 
 export const Index = 'Index';

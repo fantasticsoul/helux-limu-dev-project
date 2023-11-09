@@ -23,5 +23,5 @@
   },
   "include": [
     "src"
-, "../tmp/useShared copy.ts", "../tmp/ins copy.ts", "../tmp/signal/creator.ts"  ]
+  ]
 }

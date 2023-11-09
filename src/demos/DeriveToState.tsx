@@ -2,7 +2,7 @@ import React from 'react';
 import {
   useShared, share, watch, useForceUpdate, derive, useDerived, useDerivedAsync,
   deriveAsync, runDerive, createShared,
-} from '../helux/src';
+} from 'helux';
 import * as util from './logic/util';
 
 
@@ -26,16 +26,14 @@ const coolWrap = derive(() => {
   return { cool: doubleA + 19 }
 });
 
-const outRet = deriveAsync(
-  () => {
-    const { doubleA } = ret;
-    return { source: doubleA, initial: { val: 0 } };
-  },
-  async (params) => {
+const outRet = deriveAsync({
+  deps: () => [ret.doubleA] as const,
+  fn: () => ({ val: 0 }),
+  task: async ({ input: [doubleA] }) => {
     await util.delay();
-    return { val: params.source + 100 };
-  }
-);
+    return { val: doubleA + 100 };
+  },
+});
 
 // @ts-ignore
 window.runDerive = () => runDerive(outRet);
@@ -49,7 +47,7 @@ function change_a() {
 }
 
 function A() {
-  console.log('Render A');
+  console.log('Render A', ret);
   const [state] = useShared(ret);
   return (
     <div>
@@ -93,16 +91,17 @@ function DeriveInComp() {
 
 function DeriveAsyncInComp() {
   console.log('Render DeriveAsyncInComp');
-  const [coolCu] = useDerivedAsync(
-    () => {
-      const { doubleA } = ret;
-      return { source: doubleA, initial: { val: 0 } };
-    },
-    async (params) => {
+
+  // TODO CHECK
+  const [coolCu] = useDerivedAsync({
+    deps: () => [ret.doubleA] as const,
+    fn: () => ({ val: 0 }),
+    task: async ({ input: [doubleA] }) => {
       await util.delay();
-      return { val: params.source + 100 };
-    }
-  );
+      return { val: doubleA + 100 };
+    },
+  });
+
   const [outData] = useDerived(outRet);
   return (
     <div>

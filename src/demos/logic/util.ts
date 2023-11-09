@@ -9,11 +9,39 @@ export function getSeed() {
   return seed;
 }
 
+export function getLocaleTime(date?: Date) {
+  const d = date || new Date();
+  const str1 = d.toLocaleString();
+  const str2 = `${d.getTime()}`.substring(10);
+  return `${str1} ${str2}`;
+}
+
 export function random(seed = 100) {
   return Math.ceil(Math.random() * seed);
 }
 
+export function randomStr(length = 8) {
+  let str = '';
+  let chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  for (let i = 0; i < length; i++) {
+    str += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return str;
+}
+
 export const delay = (ms = 2000) => new Promise(r => setTimeout(r, ms));
+
+export function log(label: string, ...args: any[]) {
+  logColor(label, 'blue', ...args);
+}
+
+export function logColor(label: string, color: string, ...args: any[]) {
+  console.log(`%c ${label}`, `color:${color}`, ...args)
+}
+
+export function logRed(label: string, ...args: any[]) {
+  logColor(label, 'red', ...args);
+}
 
 export function nodupPush(list: Array<string | number>, toPush: string | number) {
   if (!list.includes(toPush)) list.push(toPush);

@@ -3,6 +3,13 @@ import React from 'react';
 import ReactDOMLegacy from "react-dom";
 import ReactDOM from "react-dom/client";
 import App from './App';
+import { HeluxPluginReduxDevtool } from 'helux-plugin-redux-devtool';
+import * as helux from 'helux';
+
+// console.log(helux.addPlugin);
+helux.addPlugin(HeluxPluginReduxDevtool)
+
+// addPlugin(HeluxPluginReduxDevtool);
 
 let rootNode = document.getElementById('root') as HTMLElement;
 if (!rootNode) {
@@ -30,6 +37,6 @@ function renderBy18Strict() {
   );
 }
 
-// renderBy16();
+renderBy16();
 // renderBy18();
-renderBy18Strict();
+// renderBy18Strict();

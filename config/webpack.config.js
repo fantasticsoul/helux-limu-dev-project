@@ -322,6 +322,8 @@ module.exports = function (webpackEnv) {
         // 'hel-micro-react': path.resolve(__dirname, '../src/hel-micro-react/src'),
         'limu': path.resolve(__dirname, '../src/limu/src'),
         'helux': path.resolve(__dirname, '../src/helux/src'),
+        'helux-core': path.resolve(__dirname, '../src/helux/src-core'),
+        'helux-plugin-redux-devtool': path.resolve(__dirname, '../src/helux/devtool'),
         // Support React Native Web
         // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
         'react-native': 'react-native-web',

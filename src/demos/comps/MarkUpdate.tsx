@@ -1,7 +1,13 @@
 
 import { useEffect, useState } from 'react';
-import { IRenderInfo } from '../../helux/src/types';
-import { nodupPush } from '../logic/util';
+import { IRenderInfo } from 'helux';
+import { nodupPush, getLocaleTime } from '../logic/util';
+
+interface IProps {
+  info?: IRenderInfo | Array<IRenderInfo>;
+  name?: string;
+  children: any;
+}
 
 const colors = ['#0944d0', '#fc774b', '#1da187', '#fdc536', '#1789f5'];
 function getColor(sn: number) {
@@ -40,9 +46,7 @@ function getInfoData(info: IRenderInfo | Array<IRenderInfo>, genDepStr?: boolean
   }
 }
 
-export function MarkUpdate(props: { info?: IRenderInfo | Array<IRenderInfo>, name?: string, children: any }) {
-  const { name = 'MarkUpdate', info = fakeInfo } = props;
-  console.log(`Render ${name || ''}`, info);
+function useMarkUpdate(info: IRenderInfo | Array<IRenderInfo>) {
   const [depStr, setDepStr] = useState('');
   const sn = getInfoData(info).sn;
   useEffect(() => {
@@ -51,14 +55,35 @@ export function MarkUpdate(props: { info?: IRenderInfo | Array<IRenderInfo>, nam
   }, [sn]);
   let snLabel = Array.isArray(info) ? 'sn sum' : 'sn';
   const snNode = sn ? `(${snLabel} ${sn})` : '';
+  return { depStr, snNode, sn };
+}
 
+function Ui(props: IProps) {
+  const { name = 'MarkUpdate', info = fakeInfo } = props;
+  const { snNode, depStr, sn } = useMarkUpdate(info);
   return (
     <div className="box">
       {props.children}
       <div className="info" style={{ backgroundColor: getColor(sn) }}>
-        [{name}] update at {new Date().toLocaleString()} {snNode}
+        [{name}] update at {getLocaleTime()} {snNode}
       </div>
       {depStr && <div style={{ color: 'green' }}> deps is [ {depStr} ]</div>}
     </div>
   );
+}
+
+export function MarkUpdate(props: IProps) {
+  return <Ui {...props}>{props.children}</Ui>;
+}
+
+export function MarkUpdateH1(props: IProps) {
+  return <Ui {...props}><h1>{props.children}</h1></Ui>;
+}
+
+export function MarkUpdateH2(props: IProps) {
+  return <Ui {...props}><h2>{props.children}</h2></Ui>;
+}
+
+export function MarkUpdateH3(props: IProps) {
+  return <Ui {...props}><h3>{props.children}</h3></Ui>;
 }

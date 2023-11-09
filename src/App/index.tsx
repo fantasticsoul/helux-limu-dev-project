@@ -15,6 +15,17 @@ function renderView(key: string) {
 function App() {
   const [viewKey, setView] = React.useState(initialKey);
   const changeView: React.ChangeEventHandler<HTMLInputElement> = (e) => setView(e.target.value);
+  const viewKeyRef = React.useRef(viewKey);
+  viewKeyRef.current = viewKey;
+
+  // React.useEffect(() => {
+  //   setInterval(() => {
+  //     const idx = compKeys.indexOf(viewKeyRef.current);
+  //     const nextIdx = idx === compKeys.length - 1 ? 0 : idx + 1;
+  //     setView(compKeys[nextIdx]);
+  //     console.log(`change to ${compKeys[nextIdx]}`);
+  //   }, 30);
+  // }, [viewKeyRef]);
 
   return (
     <div style={{ padding: '12px' }}>
